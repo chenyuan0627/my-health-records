@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日健康記錄</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div class="container">
+    <h1>જ⁀➴♡ 茱蒂ㄉ減肥計畫 ^⑉･-･⑉^ ੭</h1>
+    <div class="data-management">
+        <button id="backupBtn">備份資料</button>
+        <button id="restoreBtn">還原資料</button>
+        <input type="file" id="restoreFile" style="display: none;" accept=".json">
+    </div>
+    <form id="recordForm">
+      <h2><i class="fa-solid fa-person fa-xl"></i> 體態記錄</h2>
+      <div class="form-row">
+        <label>日期：<input type="date" id="date" required></label>
+        <label>體重（kg）：<input type="number" id="weight" step="0.1" required></label>
+      </div>
+      <div class="form-row">
+        <label>左小腿圍 (cm)：<input type="number" id="leftCalf" step="0.1"></label>
+        <label>右小腿圍 (cm)：<input type="number" id="rightCalf" step="0.1"></label>
+        <label>左大腿圍 (cm)：<input type="number" id="leftThigh" step="0.1"></label>
+        <label>右大腿圍 (cm)：<input type="number" id="rightThigh" step="0.1"></label>
+      </div>
+      <div class="form-row">
+        <label>腰圍 (cm)：<input type="number" id="waist" step="0.1"></label>
+      </div>
+      <h2><i class="fa-solid fa-utensils"></i> 三餐記錄</h2>
+      <div class="form-row">
+        <label>早餐：<input type="text" id="breakfast"></label>
+        <label>熱量（kcal）：<input type="number" id="breakfastCal" step="1"></label>
+        <label>午餐：<input type="text" id="lunch"></label>
+        <label>熱量（kcal）：<input type="number" id="lunchCal" step="1"></label>
+      </div>
+      <div class="form-row">
+        <label>晚餐：<input type="text" id="dinner"></label>
+        <label>熱量（kcal）：<input type="number" id="dinnerCal" step="1"></label>
+        <label>零食/下午茶：<input type="text" id="snack"></label>
+        <label>熱量（kcal）：<input type="number" id="snackCal" step="1"></label>
+      </div>
+      <div class="form-row">
+        <label>喝水量（ml）：<input type="number" id="water" step="50"></label>
+        <label>步數：<input type="number" id="steps" step="1"></label>
+      </div>
+      <button type="submit">儲存記錄</button>
+    </form>
+    <h2><i class="fa-solid fa-chart-pie"></i> 統計概覽</h2>
+    <div class="stats-section">
+      <h3>本周統計</h3>
+      <div class="stats-cards">
+        <div class="stat-card">平均體重<br><span id="weeklyAvgWeight">-</span> kg</div>
+        <div class="stat-card">最高體重<br><span id="weeklyMaxWeight">-</span> kg</div>
+        <div class="stat-card">最低體重<br><span id="weeklyMinWeight">-</span> kg</div>
+        <div class="stat-card">總步數<br><span id="weeklyTotalSteps">-</span></div>
+        <div class="stat-card">平均喝水量<br><span id="weeklyAvgWater">-</span> ml</div>
+      </div>
+    </div>
+    <div class="stats-section">
+      <h3>本月統計</h3>
+      <div class="stats-cards">
+        <div class="stat-card">平均體重<br><span id="monthlyAvgWeight">-</span> kg</div>
+        <div class="stat-card">最高體重<br><span id="monthlyMaxWeight">-</span> kg</div>
+        <div class="stat-card">最低體重<br><span id="monthlyMinWeight">-</span> kg</div>
+        <div class="stat-card">總步數<br><span id="monthlyTotalSteps">-</span></div>
+        <div class="stat-card">平均喝水量<br><span id="monthlyAvgWater">-</span> ml</div>
+      </div>
+    </div>
+    <h2><i class="fa-solid fa-chart-line"></i> 趨勢圖分析</h2>
+    <div class="charts-grid">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>體重變化</h3>
+          <select id="weightChartMonth" class="month-select"></select>
+        </div>
+        <canvas id="weightChart" height="200"></canvas>
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>每日步數</h3>
+          <select id="stepsChartMonth" class="month-select"></select>
+        </div>
+        <canvas id="stepsChart" height="200"></canvas>
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>圍度變化</h3>
+          <select id="measurementsChartMonth" class="month-select"></select>
+        </div>
+        <canvas id="measurementsChart" height="200"></canvas>
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>總攝取熱量</h3>
+          <select id="caloriesChartMonth" class="month-select"></select>
+        </div>
+        <canvas id="caloriesChart" height="200"></canvas>
+      </div>
+    </div>
+    <h2><i class="fa-solid fa-clock-rotate-left"></i> 歷史記錄</h2>
+    <div class="history-table-wrapper">
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>體重</th>
+            <th>早餐/熱量</th>
+            <th>午餐/熱量</th>
+            <th>晚餐/熱量</th>
+            <th>零食/熱量</th>
+            <th>喝水量(ml)</th>
+            <th>步數</th>
+            <th>總攝取熱量</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="pagination">
+        <button id="prevPage" class="page-btn">上一頁</button>
+        <span id="pageInfo">第 1 頁，共 1 頁</span>
+        <button id="nextPage" class="page-btn">下一頁</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 
